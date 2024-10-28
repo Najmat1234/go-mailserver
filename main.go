@@ -55,6 +55,8 @@ func JsonResponse(w http.ResponseWriter, status int, message string, data any) {
 }
 
 func SendEmail(req EmailRequest) (bool, error) {
+	logger.Println("Sending email...")
+
 	// Set up authentication information
 	auth := smtp.PlainAuth("", senderEmail, senderPassword, smtpHost)
 
@@ -63,7 +65,6 @@ func SendEmail(req EmailRequest) (bool, error) {
 	body := req.Message + "\n" + "From: " + req.Name + "(" + req.Email + ")"
 	message := []byte(subject + "\n" + body)
 
-	logger.Println("Sending email...")
 	// Send the email
 	err := smtp.SendMail(smtpHost+":"+smtpPort, auth, senderEmail, []string{recipientEmail, recipientEmail2}, message)
 	if err != nil {
@@ -76,8 +77,8 @@ func SendEmail(req EmailRequest) (bool, error) {
 func SenderHandler(w http.ResponseWriter, r *http.Request) {
 	mu.Lock()
 	defer mu.Unlock()
-	enableCORS(w)
-	if r.Method != http.MethodPost || r.Method != http.MethodOptions {
+	// enableCORS(w)
+	if r.Method != http.MethodPost {
 		logger.Printf("Bad request %v", http.StatusBadRequest)
 		JsonResponse(w, http.StatusBadRequest, http.StatusText(http.StatusBadRequest), nil)
 		return
