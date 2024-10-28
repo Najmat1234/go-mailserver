@@ -77,7 +77,7 @@ func SenderHandler(w http.ResponseWriter, r *http.Request) {
 	mu.Lock()
 	defer mu.Unlock()
 	enableCORS(w)
-	if r.Method != http.MethodPost {
+	if r.Method != http.MethodPost || r.Method != http.MethodOptions {
 		logger.Printf("Bad request %v", http.StatusBadRequest)
 		JsonResponse(w, http.StatusBadRequest, http.StatusText(http.StatusBadRequest), nil)
 		return
