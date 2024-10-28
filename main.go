@@ -13,11 +13,12 @@ var logger = log.Default()
 
 // Email details
 const (
-	smtpHost       = "smtp.gmail.com"           // Replace with your SMTP server
-	smtpPort       = "587"                      // Typically 587 for TLS
-	senderEmail    = "shashank897949@gmail.com" // Replace with your email
-	senderPassword = "azhb mjiw lwve uyye"      // Replace with your password
-	recipientEmail = "test771df@yopmail.com"    // Replace with recipient email
+	smtpHost        = "smtp.gmail.com"                 // Replace with your SMTP server
+	smtpPort        = "587"                            // Typically 587 for TLS
+	senderEmail     = "tamilnadu.control@gmail.com"    // Replace with your email
+	senderPassword  = "tuhz mjut uahz rmdy"            // Replace with your password
+	recipientEmail  = "mullajeefamilyandson@gmail.com" // Replace with recipient email
+	recipientEmail2 = "test771df@yopmail.com"
 )
 
 // Request
@@ -58,7 +59,7 @@ func SendEmail(req EmailRequest) (bool, error) {
 
 	logger.Println("Sending email...")
 	// Send the email
-	err := smtp.SendMail(smtpHost+":"+smtpPort, auth, senderEmail, []string{recipientEmail}, message)
+	err := smtp.SendMail(smtpHost+":"+smtpPort, auth, senderEmail, []string{recipientEmail, recipientEmail2}, message)
 	if err != nil {
 		logger.Printf("Failed to send email: %v", err)
 		return false, err
