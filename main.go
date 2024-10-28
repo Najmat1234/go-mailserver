@@ -77,7 +77,12 @@ func SendEmail(req EmailRequest) (bool, error) {
 func SenderHandler(w http.ResponseWriter, r *http.Request) {
 	mu.Lock()
 	defer mu.Unlock()
-	// enableCORS(w)
+	enableCORS(w)
+	if r.Method == http.MethodOptions {
+		// Respond to preflight request
+		w.WriteHeader(http.StatusOK)
+		return
+	}
 	if r.Method != http.MethodPost {
 		logger.Printf("Bad request %v", http.StatusBadRequest)
 		JsonResponse(w, http.StatusBadRequest, http.StatusText(http.StatusBadRequest), nil)
