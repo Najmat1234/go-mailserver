@@ -36,6 +36,13 @@ type Response struct {
 	Data    any    `json:"data,omitempty"`
 }
 
+// CORS middleware
+func enableCORS(w http.ResponseWriter) {
+	w.Header().Set("Access-Control-Allow-Origin", "*") // Allow all origins (for development)
+	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+}
+
 func JsonResponse(w http.ResponseWriter, status int, message string, data any) {
 	response := &Response{
 		Status:  status,
@@ -45,7 +52,6 @@ func JsonResponse(w http.ResponseWriter, status int, message string, data any) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
 	json.NewEncoder(w).Encode(response)
-
 }
 
 func SendEmail(req EmailRequest) (bool, error) {
@@ -70,6 +76,7 @@ func SendEmail(req EmailRequest) (bool, error) {
 func SenderHandler(w http.ResponseWriter, r *http.Request) {
 	mu.Lock()
 	defer mu.Unlock()
+	enableCORS(w)
 	if r.Method != http.MethodPost {
 		logger.Printf("Bad request %v", http.StatusBadRequest)
 		JsonResponse(w, http.StatusBadRequest, http.StatusText(http.StatusBadRequest), nil)
@@ -94,6 +101,7 @@ func SenderHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func HealthHandler(w http.ResponseWriter, r *http.Request) {
+	enableCORS(w)
 	logger.Println("Health route hit")
 	JsonResponse(w, http.StatusOK, http.StatusText(http.StatusOK), "Healthy")
 }
